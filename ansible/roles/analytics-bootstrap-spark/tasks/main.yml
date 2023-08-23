@@ -23,9 +23,9 @@
     - {var: 'AWS_REGION', value: '{{ aws_region }}'}
     - {var: 'AWS_PRIVATE_S3_BUCKET', value: '{{ aws_private_s3_bucket }}'}
     - {var: 'AWS_PUBLIC_S3_BUCKET', value: '{{ aws_public_s3_bucket }}'}
-    - {var: 'REPORT_BACKUP_CONTAINER', value: 'portal-reports-backup'}
-    - {var: 'GOOGLE_CREDENTIALS_PATH', value: '/home/analytics/credentials'}
-    - {var: 'STORAGE_PROVIDER', value: 'AZURE'}
+    - {var: 'AWS_REPORT_BACKUP_BUCKET', value: 'portal-reports-backup'}
+    # - {var: 'GOOGLE_CREDENTIALS_PATH', value: '/home/analytics/credentials'}
+    - {var: 'STORAGE_PROVIDER', value: 'AWS'}
     - {var: 'ENV', value: '{{env}}'}
     - {var: 'KAFKA_BROKER_HOST', value: "{{groups['processing-cluster-kafka'][0]}}:9092"}
 
