@@ -5,6 +5,13 @@
   tags:
     - always
 
+- name: Ensure AWS S3 bucket exists
+  command: aws s3api head-bucket --bucket {{ bucket }}
+  register: check_bucket
+  when: dp_object_store_type == "aws"
+  tags:
+    - always
+
 - name: Copy Core Data Products
   copy: src={{ analytics_batch_module_artifact }} dest={{ analytics.home }}/models-{{ model_version }}
   tags:
@@ -39,6 +46,16 @@
   command: az storage blob upload --overwrite --debug -c {{ bucket }} --name models-{{ model_version }}/{{ analytics_core_artifact }} -f {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }}
   async: 3600
   poll: 10
+  when: dp_object_store_type == "azure"
+  tags:
+    - framework-spark-cluster
+
+
+- name: Copy Framework Library to AWS S3
+  command: aws s3 cp {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }} s3://{{ bucket }}/models-{{ model_version }}/{{ analytics_core_artifact }} --recursive --acl bucket-owner-full-control
+  async: 3600
+  poll: 10
+  when: dp_object_store_type == "aws"
   tags:
     - framework-spark-cluster
 
@@ -100,8 +117,17 @@
   command: az storage blob upload --overwrite -c {{ bucket }} -f {{ analytics.home }}/models-{{ model_version }}/application.conf --name models-{{ model_version }}/application.conf
   async: 3600
   poll: 10
+  when: dp_object_store_type == "azure"
   tags:
     - framework-spark-cluster    
+
+- name: Copy configuration file to AWS S3
+  command: aws s3 cp {{ analytics.home }}/models-{{ model_version }}/application.conf s3://{{ bucket }}/models-{{ model_version }}/application.conf --acl bucket-owner-full-control
+  async: 3600
+  poll: 10
+  when: dp_object_store_type == "aws"
+  tags:
+    - framework-spark-cluster
 
 - name: Copy log4j2 xml file
   template: src=log4j2.xml.j2 dest={{ analytics.home }}/models-{{ model_version }}/log4j2.xml mode=755 owner={{ analytics_user }} group={{ analytics_group }}
