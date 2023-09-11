@@ -52,7 +52,7 @@
 
 
 - name: Copy Framework Library to AWS S3
-  command: aws s3 cp {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }} s3://{{ bucket }}/models-{{ model_version }}/{{ analytics_core_artifact }}
+  command: aws s3 cp {{ analytics.home }}/models-{{ model_version }}/{{ analytics_core_artifact }} s3://{{ bucket }}/models-{{ model_version }}/{{ analytics_core_artifact }} --acl bucket-owner-full-control
   async: 3600
   poll: 10
   when: dp_object_store_type == "aws"
@@ -73,7 +73,7 @@
     - framework-spark-cluster  
 
 - name: Copy Scruid Library to AWS S3
-  command: aws s3 cp {{ analytics.home }}/models-{{ model_version }}/{{ scruid_artifact }} s3://{{ bucket }}/models-{{ model_version }}/{{ scruid_artifact }} --recursive --acl bucket-owner-full-control
+  command: aws s3 cp {{ analytics.home }}/models-{{ model_version }}/{{ scruid_artifact }} s3://{{ bucket }}/models-{{ model_version }}/{{ scruid_artifact }} --acl bucket-owner-full-control
   async: 3600
   poll: 10
   when: dp_object_store_type == "aws"
