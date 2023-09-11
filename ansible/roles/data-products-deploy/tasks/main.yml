@@ -68,7 +68,7 @@
   command: az storage blob upload --overwrite -c {{ bucket }} --name models-{{ model_version }}/{{ scruid_artifact }} -f {{ analytics.home }}/models-{{ model_version }}/{{ scruid_artifact }}
   async: 3600
   poll: 10
-  when: dp_object_store_type == "aws"
+  when: dp_object_store_type == "azure"
   tags:
     - framework-spark-cluster  
 
